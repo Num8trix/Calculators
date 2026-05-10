@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,28 +12,212 @@
 <div id="nav"></div>
 
 <div class="container">
+
   <div class="card">
-    <h2>Quadratic Factorization</h2>
-    <input id="x" placeholder="Enter e.g. x^2 + 5x + 6">
-    <button onclick="factor()">Factorize</button>
-    <div class="result" id="out"></div>
+    <h2>Polynomial Factorization 🧩</h2>
+    <p>Factor quadratic and cubic expressions. Enter your polynomial and get the factored form with steps.</p>
+
+```
+<input id="expr" placeholder="e.g., x^2 + 5x + 6  or  x^2 - 9" />
+
+<button onclick="factor()">🔍 Factor</button>
+<button onclick="example1()">Example: Quadratic</button>
+<button onclick="example2()">Example: Difference of Squares</button>
+
+<div class="result" id="out"></div>
+```
+
   </div>
+
+  <div class="card">
+    <h3>Factorization Types</h3>
+    <p><strong>Quadratic:</strong> x² + 5x + 6 → (x + 2)(x + 3)</p>
+    <p><strong>Difference of Squares:</strong> x² - 9 → (x + 3)(x - 3)</p>
+    <p><strong>Perfect Square:</strong> x² + 6x + 9 → (x + 3)²</p>
+    <p><strong>Common Factor:</strong> 2x² + 4x → 2x(x + 2)</p>
+  </div>
+
 </div>
 
-<footer>Num8trix Factorization</footer>
-
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function factor() {
-  const v = x.value.replace(/\s+/g,'');
-  if (v === "x^2+5x+6" || v === "x^2+5x+6") {
-    out.textContent = "(x + 2)(x + 3)";
-  } else {
-    out.textContent = "Try quadratic format: x^2 + bx + c";
+  document.getElementById("nav").innerHTML = nav();
+
+  function example1() {
+    expr.value = "x^2 + 5x + 6";
+    factor();
   }
-}
+
+  function example2() {
+    expr.value = "x^2 - 16";
+    factor();
+  }
+
+  function parseExpression(str) {
+    str = str.replace(/\s+/g, '').toLowerCase();
+    
+    const quadMatch = str.match(/([+-]?\d*)x\^2([+-]?\d*)x?([+-]?\d+)?/);
+    if (!quadMatch) return null;
+    
+    const a = quadMatch[1] === '' || quadMatch[1] === '+' ? 1 :
+              quadMatch[1] === '-' ? -1 : parseInt(quadMatch[1]);
+    const b = quadMatch[2] === '' || quadMatch[2] === '+' ? 1 :
+              quadMatch[2] === '-' ? -1 : 
+              quadMatch[2] ? parseInt(quadMatch[2]) : 0;
+    const c = quadMatch[3] ? parseInt(quadMatch[3]) : 0;
+    
+    return { a, b, c };
+  }
+
+  function gcd(a, b) {
+    a = Math.abs(a);
+    b = Math.abs(b);
+    while (b) {
+      const t = b;
+      b = a % b;
+      a = t;
+    }
+    return a;
+  }
+
+  function factor() {
+    const input = expr.value.trim();
+    
+    if (!input) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Please enter an expression.</span>';
+      return;
+    }
+    
+    const coeffs = parseExpression(input);
+    
+    if (!coeffs) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Please enter a valid quadratic expression (ax² + bx + c).</span>';
+      return;
+    }
+    
+    const { a, b, c } = coeffs;
+    let result = '<strong>Factorization Steps:</strong>\n\n';
+    result += `Expression: ${a !== 1 ? a : ''}x² ${b >= 0 ? '+' : ''}${b !== 0 ? (b === 1 ? '' : b === -1 ? '-' : b) + 'x' : ''} ${c >= 0 ? '+' : ''}${c !== 0 ? c : ''}\n\n`;
+    
+    // Check for common factor
+    const commonFactor = gcd(gcd(a, b), c);
+    if (commonFactor > 1) {
+      result += `Step 1: Factor out common factor ${commonFactor}\n`;
+      const newA = a / commonFactor;
+      const newB = b / commonFactor;
+      const newC = c / commonFactor;
+      result += `  ${commonFactor}(${newA !== 1 ? newA : ''}x² ${newB >= 0 ? '+' : ''}${newB !== 0 ? (newB === 1 ? '' : newB === -1 ? '-' : newB) + 'x' : ''} ${newC >= 0 ? '+' : ''}${newC})\n\n`;
+    }
+    
+    const workingA = commonFactor > 1 ? a / commonFactor : a;
+    const workingB = commonFactor > 1 ? b / commonFactor : b;
+    const workingC = commonFactor > 1 ? c / commonFactor : c;
+    
+    // Difference of squares: a²x² - b² = (ax + b)(ax - b)
+    if (workingB === 0 && workingC < 0) {
+      const sqrtA = Math.sqrt(Math.abs(workingA));
+      const sqrtC = Math.sqrt(Math.abs(workingC));
+      
+      if (sqrtA % 1 === 0 && sqrtC % 1 === 0) {
+        result += `${commonFactor > 1 ? 'Step 2: ' : 'Step 1: '}Difference of squares pattern: a² - b² = (a + b)(a - b)\n`;
+        result += `  (${sqrtA !== 1 ? sqrtA : ''}x + ${sqrtC})(${sqrtA !== 1 ? sqrtA : ''}x - ${sqrtC})\n\n`;
+        
+        const factor1 = `${sqrtA !== 1 ? sqrtA : ''}x + ${sqrtC}`;
+        const factor2 = `${sqrtA !== 1 ? sqrtA : ''}x - ${sqrtC}`;
+        
+        result += `<strong>Final Answer:</strong>\n`;
+        result += commonFactor > 1 ? `${commonFactor}(${factor1})(${factor2})` : `(${factor1})(${factor2})`;
+        out.innerHTML = result;
+        return;
+      }
+    }
+    
+    // Perfect square trinomial
+    const perfectSq = Math.sqrt(workingC);
+    if (workingA === 1 && perfectSq % 1 === 0 && workingB === 2 * perfectSq) {
+      result += `${commonFactor > 1 ? 'Step 2: ' : 'Step 1: '}Perfect square trinomial: (x + ${perfectSq})²\n\n`;
+      result += `<strong>Final Answer:</strong>\n`;
+      result += commonFactor > 1 ? `${commonFactor}(x + ${perfectSq})²` : `(x + ${perfectSq})²`;
+      out.innerHTML = result;
+      return;
+    }
+    
+    if (workingA === 1 && perfectSq % 1 === 0 && workingB === -2 * perfectSq) {
+      result += `${commonFactor > 1 ? 'Step 2: ' : 'Step 1: '}Perfect square trinomial: (x - ${perfectSq})²\n\n`;
+      result += `<strong>Final Answer:</strong>\n`;
+      result += commonFactor > 1 ? `${commonFactor}(x - ${perfectSq})²` : `(x - ${perfectSq})²`;
+      out.innerHTML = result;
+      return;
+    }
+    
+    // Standard quadratic factoring (for a = 1)
+    if (workingA === 1) {
+      result += `${commonFactor > 1 ? 'Step 2: ' : 'Step 1: '}Find two numbers that multiply to ${workingC} and add to ${workingB}\n`;
+      
+      for (let i = 1; i <= Math.abs(workingC); i++) {
+        if (workingC % i === 0) {
+          const j = workingC / i;
+          
+          if (i + j === workingB) {
+            result += `  Numbers: ${i} and ${j}\n`;
+            result += `  Check: ${i} × ${j} = ${workingC}, ${i} + ${j} = ${workingB} ✓\n\n`;
+            result += `<strong>Final Answer:</strong>\n`;
+            result += commonFactor > 1 ? `${commonFactor}(x + ${i})(x + ${j})` : `(x + ${i})(x + ${j})`;
+            out.innerHTML = result;
+            return;
+          }
+          
+          if (i - j === workingB) {
+            result += `  Numbers: ${i} and ${-j}\n`;
+            result += `  Check: ${i} × ${-j} = ${workingC}, ${i} + ${-j} = ${workingB} ✓\n\n`;
+            result += `<strong>Final Answer:</strong>\n`;
+            result += commonFactor > 1 ? `${commonFactor}(x + ${i})(x - ${j})` : `(x + ${i})(x - ${j})`;
+            out.innerHTML = result;
+            return;
+          }
+          
+          if (-i + j === workingB) {
+            result += `  Numbers: ${-i} and ${j}\n`;
+            result += `  Check: ${-i} × ${j} = ${workingC}, ${-i} + ${j} = ${workingB} ✓\n\n`;
+            result += `<strong>Final Answer:</strong>\n`;
+            result += commonFactor > 1 ? `${commonFactor}(x - ${i})(x + ${j})` : `(x - ${i})(x + ${j})`;
+            out.innerHTML = result;
+            return;
+          }
+          
+          if (-i - j === workingB) {
+            result += `  Numbers: ${-i} and ${-j}\n`;
+            result += `  Check: ${-i} × ${-j} = ${workingC}, ${-i} + ${-j} = ${workingB} ✓\n\n`;
+            result += `<strong>Final Answer:</strong>\n`;
+            result += commonFactor > 1 ? `${commonFactor}(x - ${i})(x - ${j})` : `(x - ${i})(x - ${j})`;
+            out.innerHTML = result;
+            return;
+          }
+        }
+      }
+    }
+    
+    // If no factorization found, use quadratic formula
+    const discriminant = workingB * workingB - 4 * workingA * workingC;
+    
+    if (discriminant < 0) {
+      result += '\n<span style="color: #ffa502;">This expression has no real factors (complex roots).</span>';
+      out.innerHTML = result;
+      return;
+    }
+    
+    const sqrtDisc = Math.sqrt(discriminant);
+    const root1 = (-workingB + sqrtDisc) / (2 * workingA);
+    const root2 = (-workingB - sqrtDisc) / (2 * workingA);
+    
+    result += `\nUsing quadratic formula:\n`;
+    result += `Roots: x = ${root1.toFixed(2)}, x = ${root2.toFixed(2)}\n\n`;
+    result += `<strong>Final Answer:</strong>\n`;
+    result += `${commonFactor > 1 ? commonFactor : ''}${workingA !== 1 ? workingA : ''}(x - ${root1.toFixed(2)})(x - ${root2.toFixed(2)})`;
+    
+    out.innerHTML = result;
+  }
 </script>
 
 </body>
