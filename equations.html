@@ -1,43 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Equations - Num8trix</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equations Solver - Num8trix</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="nav"></div>
 
 <div class="container">
+  <div class="card">
+    <h2>Simultaneous Equations Solver</h2>
+    <p>Enter in form (a1,b1,c1) and (a2,b2,c2).</p>
 
-<div class="card">
-<h2>Equations Solver</h2>
-
-<input id="a" placeholder="a1,b1,c1">
-<input id="b" placeholder="a2,b2,c2">
-
-<button onclick="solve()">Solve</button>
-
-<div class="result" id="out"></div>
+    <input id="a" placeholder="a1,b1,c1">
+    <input id="b" placeholder="a2,b2,c2">
+    <button onclick="solve()">Solve</button>
+    <div class="result" id="out"></div>
+  </div>
 </div>
 
-</div>
+<footer>Num8trix Equations Solver</footer>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML=nav();</script>
+<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function solve(){
-let A=a.value.split(",").map(Number);
-let B=b.value.split(",").map(Number);
-
-let [a1,b1,c1]=A;
-let [a2,b2,c2]=B;
-
-let x=(c1*b2-c2*b1)/(a1*b2-a2*b1);
-let y=(a1*c2-a2*c1)/(a1*b2-a2*b1);
-
-out.innerText=`x=${x}\ny=${y}`;
+function solve() {
+  try {
+    let [a1,b1,c1] = a.value.split(",").map(Number);
+    let [a2,b2,c2] = b.value.split(",").map(Number);
+    let det = (a1*b2 - a2*b1);
+    if (det === 0) return out.textContent = "❌ No unique solution.";
+    let x = (c1*b2 - c2*b1) / det;
+    let y = (a1*c2 - a2*c1) / det;
+    out.textContent = `x = ${x}\ny = ${y}`;
+  } catch {
+    out.textContent = "⚠️ Please enter valid numeric inputs.";
+  }
 }
 </script>
 
