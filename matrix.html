@@ -1,47 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Matrix - Num8trix</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix Calculator - Num8trix</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="nav"></div>
 
 <div class="container">
+  <div class="card">
+    <h2>Matrix Operations</h2>
+    <p>Enter matrices using commas for columns and semicolons for rows.<br>Example: <code>1,2,3;4,5,6</code></p>
 
-<div class="card">
-<h2>Matrix Calculator</h2>
+    <input id="a" placeholder="Matrix A">
+    <input id="b" placeholder="Matrix B (optional)">
 
-<input id="a" placeholder="Matrix A (1,2,3;4,5,6)">
-<input id="b" placeholder="Matrix B">
+    <button onclick="add()">Add</button>
+    <button onclick="sub()">Subtract</button>
 
-<button onclick="add()">Add</button>
-<button onclick="sub()">Subtract</button>
-
-<div class="result" id="out"></div>
+    <div class="result" id="out"></div>
+  </div>
 </div>
 
-</div>
+<footer>Num8trix Matrix Calculator</footer>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML=nav();</script>
+<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function parse(m){
-  return m.split(";").map(r=>r.split(",").map(Number));
+function parseMatrix(m) {
+  return m.split(";").map(r => r.split(",").map(Number));
 }
 
-function add(){
-  let A=parse(a.value), B=parse(b.value);
-  let R=A.map((r,i)=>r.map((v,j)=>v+B[i][j]));
-  out.innerText=JSON.stringify(R,null,2);
+function add() {
+  try {
+    const A = parseMatrix(a.value), B = parseMatrix(b.value);
+    const R = A.map((r,i)=>r.map((v,j)=>v + B[i][j]));
+    out.textContent = JSON.stringify(R, null, 2);
+  } catch(e) {
+    out.textContent = "⚠️ Invalid input.";
+  }
 }
 
-function sub(){
-  let A=parse(a.value), B=parse(b.value);
-  let R=A.map((r,i)=>r.map((v,j)=>v-B[i][j]));
-  out.innerText=JSON.stringify(R,null,2);
+function sub() {
+  try {
+    const A = parseMatrix(a.value), B = parseMatrix(b.value);
+    const R = A.map((r,i)=>r.map((v,j)=>v - B[i][j]));
+    out.textContent = JSON.stringify(R, null, 2);
+  } catch(e) {
+    out.textContent = "⚠️ Invalid input.";
+  }
 }
 </script>
 
