@@ -1,32 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>MathForge</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathForge</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#070A12;
+    --card:rgba(255,255,255,0.06);
+    --border:rgba(255,255,255,0.1);
+    --text:#eaf0ff;
+    --muted:#9aa4b2;
+    --accent:#6d5efc;
+    --accent2:#00d4ff;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Inter;
+    background: radial-gradient(circle at top, #111a33, var(--bg));
+    color:var(--text);
+}
+
+/* HERO */
+.hero{
+    padding:50px 20px;
+    text-align:center;
+}
+
+.logo{
+    font-size:34px;
+    font-weight:800;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    color:var(--muted);
+    margin-top:10px;
+    font-size:15px;
+}
+
+/* GRID */
+.grid{
+    max-width:1000px;
+    margin:40px auto;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+}
+
+/* CARD */
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:18px;
+    border-radius:16px;
+    transition:0.25s;
+    backdrop-filter: blur(10px);
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:var(--accent2);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.icon{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+}
+
+.title{
+    margin-top:12px;
+    font-weight:700;
+    font-size:16px;
+}
+
+.desc{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:6px;
+}
+
+/* BUTTON STYLE LINK */
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+@media(max-width:600px){
+    .logo{font-size:28px}
+}
+</style>
 </head>
+
 <body>
 
-<div id="nav"></div>
-
-<div class="container">
-  <div class="card">
-    <h2>Welcome to MathForge</h2>
-    <p>Advanced math calculators made simple.</p>
-  </div>
-
-  <div class="card">
-    <h3>Choose a tool:</h3>
-    <ul>
-      <li>Matrix Calculator</li>
-      <li>Polynomial Division</li>
-      <li>Factorization</li>
-      <li>Simultaneous Equations</li>
-    </ul>
-  </div>
+<div class="hero">
+    <div class="logo">MathForge</div>
+    <div class="subtitle">Advanced mathematics tools — simplified, visualized, and fast.</div>
 </div>
 
-<script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
+<div class="grid">
+
+    <a href="matrix.html">
+        <div class="card">
+            <div class="icon">∑</div>
+            <div class="title">Matrix Calculator</div>
+            <div class="desc">Add, multiply, inverse matrices step-by-step</div>
+        </div>
+    </a>
+
+    <a href="polynomial.html">
+        <div class="card">
+            <div class="icon">xⁿ</div>
+            <div class="title">Polynomial Division</div>
+            <div class="desc">Long division with full working steps</div>
+        </div>
+    </a>
+
+    <a href="factorization.html">
+        <div class="card">
+            <div class="icon">√</div>
+            <div class="title">Factorization</div>
+            <div class="desc">Break expressions into factors instantly</div>
+        </div>
+    </a>
+
+    <a href="equations.html">
+        <div class="card">
+            <div class="icon">≡</div>
+            <div class="title">Equations Solver</div>
+            <div class="desc">Solve systems of linear equations</div>
+        </div>
+    </a>
+
+</div>
 
 </body>
 </html>
