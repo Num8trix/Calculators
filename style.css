@@ -1,85 +1,113 @@
 :root{
-  --bg:#0b1020;
-  --card:#141a2a;
-  --accent:#4f8cff;
-  --text:#e6edf7;
-  --border:#24314a;
+  --bg:#070a12;
+  --card:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.1);
+  --text:#eaf0ff;
+  --muted:#9aa4b2;
+  --a:#6d5efc;
+  --b:#00d4ff;
 }
+
+*{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family:Arial;
-  background:var(--bg);
+  font-family:Inter, Arial;
+  background:radial-gradient(circle at top, #121a33, var(--bg));
   color:var(--text);
 }
 
-header{
-  padding:14px;
-  background:var(--card);
-  border-bottom:1px solid var(--border);
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 18px;
   position:sticky;
   top:0;
+  backdrop-filter:blur(12px);
+  background:rgba(10,14,25,0.7);
+  border-bottom:1px solid var(--border);
 }
 
 .brand{
-  font-weight:bold;
+  font-weight:800;
+  background:linear-gradient(90deg,var(--a),var(--b));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
   font-size:20px;
-  color:var(--accent);
 }
 
-.nav{
+.links{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:10px;
 }
 
-.nav a{
-  color:var(--text);
+.links a{
   text-decoration:none;
+  color:var(--text);
+  font-size:13px;
   padding:6px 10px;
   border:1px solid var(--border);
   border-radius:8px;
 }
 
+/* LAYOUT */
 .container{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
   padding:20px;
 }
 
+/* CARD */
 .card{
   background:var(--card);
-  padding:15px;
-  border-radius:12px;
   border:1px solid var(--border);
-  margin-top:15px;
+  border-radius:16px;
+  padding:16px;
+  margin-top:16px;
+  backdrop-filter: blur(10px);
 }
 
-input{
+h2{
+  margin-top:0;
+}
+
+/* INPUTS */
+input, textarea{
   width:100%;
   padding:10px;
   margin-top:8px;
-  border-radius:8px;
+  border-radius:10px;
   border:1px solid var(--border);
-  background:#0e1424;
-  color:white;
+  background:rgba(0,0,0,0.2);
+  color:var(--text);
 }
 
+/* BUTTON */
 button{
   margin-top:10px;
   padding:10px;
-  background:var(--accent);
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--a),var(--b));
   color:white;
   cursor:pointer;
 }
 
+/* RESULT */
 .result{
-  margin-top:10px;
-  padding:10px;
-  background:#0e1424;
-  border-radius:8px;
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(0,0,0,0.25);
+  border:1px solid var(--border);
   white-space:pre-wrap;
+}
+
+/* GRID INPUTS */
+.grid{
+  display:grid;
+  gap:6px;
 }
