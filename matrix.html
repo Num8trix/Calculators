@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Matrix - MathForge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="nav"></div>
+
+<div class="container">
+  <div class="card">
+    <h2>Matrix Addition</h2>
+
+    <input id="a1" placeholder="Matrix A (comma separated e.g. 1,2,3)">
+    <input id="b1" placeholder="Matrix B">
+
+    <button onclick="calc()">Calculate</button>
+
+    <div class="result" id="out"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>document.getElementById("nav").innerHTML = nav();</script>
+
+<script>
+function parse(str){
+  return str.split(",").map(Number);
+}
+
+function calc(){
+  let a = parse(document.getElementById("a1").value);
+  let b = parse(document.getElementById("b1").value);
+
+  if(a.length !== b.length){
+    document.getElementById("out").innerText = "Matrix size mismatch";
+    return;
+  }
+
+  let res = a.map((v,i)=>v+b[i]);
+  document.getElementById("out").innerText = "Result: " + res.join(", ");
+}
+</script>
+
+</body>
+</html>
