@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Num8trix</title>
+  <title>Num8trix - Interactive Math Tools</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,23 +14,54 @@
 <div class="container">
 
   <div class="card">
-    <h2>Welcome to Num8trix</h2>
-    <p>Your interactive mathematics playground for smart, step‑by‑step calculations. Optimized for desktop and mobile so you can calculate anywhere.</p>
+    <h2>Welcome to Num8trix 🧮</h2>
+    <p>Your interactive mathematics companion with step-by-step solutions. Choose a tool below to get started with powerful calculations and visual explanations.</p>
   </div>
 
   <div class="card">
-    <h3>Select a Tool</h3>
-    <button onclick="location.href='matrix.html'">🧮 Matrix Calculator</button>
-    <button onclick="location.href='polynomial.html'">🔢 Polynomial Division</button>
-    <button onclick="location.href='factorization.html'">🧩 Factorization</button>
-    <button onclick="location.href='equations.html'">📈 Equation Solver</button>
+    <h3>Mathematical Tools</h3>
+
+```
+<div class="tool-buttons">
+  <button class="tool-btn" onclick="location.href='matrix.html'">
+    <span class="tool-icon">🔢</span>
+    <div>Matrix Calculator</div>
+  </button>
+  
+  <button class="tool-btn" onclick="location.href='polynomial.html'">
+    <span class="tool-icon">📐</span>
+    <div>Polynomial Division</div>
+  </button>
+  
+  <button class="tool-btn" onclick="location.href='factorization.html'">
+    <span class="tool-icon">🧩</span>
+    <div>Factorization</div>
+  </button>
+  
+  <button class="tool-btn" onclick="location.href='equations.html'">
+    <span class="tool-icon">⚖️</span>
+    <div>Equations Solver</div>
+  </button>
+</div>
+```
+
+  </div>
+
+  <div class="card">
+    <h3>Features</h3>
+    <p>✨ Interactive calculations with instant results<br>
+    📱 Mobile-friendly responsive design<br>
+    🎯 Step-by-step solutions<br>
+    🚀 Fast and accurate computations</p>
   </div>
 
 </div>
 
-<footer>© 2026 Num8trix — Making Math Clear & Interactive</footer>
-
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
+
+<script>
+  document.getElementById("nav").innerHTML = nav();
+</script>
+
 </body>
 </html>
