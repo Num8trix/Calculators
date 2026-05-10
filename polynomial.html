@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,30 +12,169 @@
 <div id="nav"></div>
 
 <div class="container">
+
   <div class="card">
-    <h2>Polynomial Division</h2>
-    <p>Perform step-by-step long division between two polynomials.</p>
+    <h2>Polynomial Division 📐</h2>
+    <p>Divide polynomials with detailed step-by-step solutions. Enter polynomials in standard form.</p>
 
-    <input id="a" placeholder="Dividend (e.g. x^3 + 2x^2 - 5x + 3)">
-    <input id="b" placeholder="Divisor (e.g. x + 1)">
-    <button onclick="divide()">Divide</button>
+```
+<input id="dividend" placeholder="Dividend: e.g., x^3 + 2x^2 - 5x + 3" />
+<input id="divisor" placeholder="Divisor: e.g., x + 1" />
 
-    <div class="result" id="out"></div>
+<button onclick="divide()">🔍 Divide</button>
+<button onclick="example1()">Example 1</button>
+<button onclick="example2()">Example 2</button>
+
+<div class="result" id="out"></div>
+```
+
   </div>
+
+  <div class="card">
+    <h3>How to Use</h3>
+    <p><strong>Format:</strong> Use ^ for exponents (x^2, x^3)</p>
+    <p><strong>Example 1:</strong> (x² + 5x + 6) ÷ (x + 2)</p>
+    <p><strong>Example 2:</strong> (2x³ - 3x² + x - 5) ÷ (x - 2)</p>
+    <p>The calculator will show you each step of the long division process.</p>
+  </div>
+
 </div>
 
-<footer>Num8trix Polynomial Division</footer>
-
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function divide() {
-  out.textContent = `Step 1️⃣ Arrange terms
-Step 2️⃣ Divide leading terms
-Step 3️⃣ Multiply and subtract
-Step 4️⃣ Repeat until remainder is smaller degree.`;
-}
+  document.getElementById("nav").innerHTML = nav();
+
+  function example1() {
+    dividend.value = "x^2 + 5x + 6";
+    divisor.value = "x + 2";
+    divide();
+  }
+
+  function example2() {
+    dividend.value = "2x^3 - 3x^2 + x - 5";
+    divisor.value = "x - 2";
+    divide();
+  }
+
+  function parsePolynomial(str) {
+    str = str.replace(/\s+/g, '');
+    const terms = {};
+    const regex = /([+-]?)(\d*\.?\d*)?\*?x?\^?(\d+)?/g;
+    let match;
+    
+    str.split(/(?=[+-])/).forEach(term => {
+      term = term.trim();
+      if (!term) return;
+      
+      let coef = 1;
+      let power = 0;
+      
+      if (term.includes('x')) {
+        const parts = term.split('x');
+        coef = parts[0] === '' || parts[0] === '+' ? 1 : 
+               parts[0] === '-' ? -1 : parseFloat(parts[0]);
+        
+        if (parts[1] && parts[1].includes('^')) {
+          power = parseInt(parts[1].substring(1));
+        } else {
+          power = 1;
+        }
+      } else {
+        coef = parseFloat(term);
+        power = 0;
+      }
+      
+      terms[power] = (terms[power] || 0) + coef;
+    });
+    
+    return terms;
+  }
+
+  function polynomialToString(terms) {
+    const powers = Object.keys(terms).map(Number).sort((a, b) => b - a);
+    if (powers.length === 0) return '0';
+    
+    return powers.map((p, i) => {
+      const c = terms[p];
+      if (c === 0) return '';
+      
+      let str = '';
+      if (i > 0 && c > 0) str += ' + ';
+      if (c < 0) str += i === 0 ? '-' : ' - ';
+      
+      const absC = Math.abs(c);
+      if (absC !== 1 || p === 0) str += absC;
+      if (p > 0) {
+        str += 'x';
+        if (p > 1) str += '^' + p;
+      }
+      
+      return str;
+    }).filter(s => s !== '').join('');
+  }
+
+  function divide() {
+    const dividendStr = dividend.value.trim();
+    const divisorStr = divisor.value.trim();
+    
+    if (!dividendStr || !divisorStr) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Please enter both dividend and divisor.</span>';
+      return;
+    }
+    
+    try {
+      const dividendTerms = parsePolynomial(dividendStr);
+      const divisorTerms = parsePolynomial(divisorStr);
+      
+      const dividendDegree = Math.max(...Object.keys(dividendTerms).map(Number));
+      const divisorDegree = Math.max(...Object.keys(divisorTerms).map(Number));
+      
+      if (divisorDegree > dividendDegree) {
+        out.innerHTML = `<strong>Result:</strong>\n\nQuotient: 0\nRemainder: ${polynomialToString(dividendTerms)}`;
+        return;
+      }
+      
+      let steps = '<strong>Step-by-Step Solution:</strong>\n\n';
+      steps += `Dividing: (${polynomialToString(dividendTerms)}) ÷ (${polynomialToString(divisorTerms)})\n\n`;
+      
+      const quotient = {};
+      let remainder = {...dividendTerms};
+      let stepNum = 1;
+      
+      while (true) {
+        const remDegree = Math.max(...Object.keys(remainder).filter(k => remainder[k] !== 0).map(Number));
+        
+        if (remDegree < divisorDegree) break;
+        
+        const leadCoef = remainder[remDegree] / divisorTerms[divisorDegree];
+        const leadPower = remDegree - divisorDegree;
+        
+        quotient[leadPower] = leadCoef;
+        
+        steps += `Step ${stepNum}: Divide leading terms\n`;
+        steps += `  ${remainder[remDegree]}x^${remDegree} ÷ ${divisorTerms[divisorDegree]}x^${divisorDegree} = ${leadCoef}x^${leadPower}\n\n`;
+        
+        Object.keys(divisorTerms).forEach(p => {
+          const power = parseInt(p);
+          const newPower = power + leadPower;
+          remainder[newPower] = (remainder[newPower] || 0) - leadCoef * divisorTerms[power];
+        });
+        
+        stepNum++;
+      }
+      
+      steps += '\n<strong>Final Result:</strong>\n';
+      steps += `Quotient: ${polynomialToString(quotient)}\n`;
+      const remStr = polynomialToString(remainder);
+      steps += `Remainder: ${remStr === '' ? '0' : remStr}`;
+      
+      out.innerHTML = steps;
+      
+    } catch (e) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Error parsing polynomial. Please check your format.</span>';
+    }
+  }
 </script>
 
 </body>
