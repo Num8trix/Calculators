@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Factorization - MathForge</title>
-  <link rel="stylesheet" href="styles.css">
+<title>Factor - Num8trix</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="nav"></div>
 
 <div class="container">
-  <div class="card">
-    <h2>Factorization</h2>
 
-    <input id="exp" placeholder="x^2 + 5x + 6">
+<div class="card">
+<h2>Factorization</h2>
 
-    <button onclick="factor()">Factor</button>
+<input id="x" placeholder="x^2 + 5x + 6">
 
-    <div class="result" id="out"></div>
-  </div>
+<button onclick="factor()">Factor</button>
+
+<div class="result" id="out"></div>
+</div>
+
 </div>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
+<script>document.getElementById("nav").innerHTML=nav();</script>
 
 <script>
 function factor(){
-  let e = document.getElementById("exp").value;
+let v=x.value;
 
-  if(e.includes("x^2") && e.includes("+5x+6")){
-    document.getElementById("out").innerText =
-    "(x + 2)(x + 3)";
-  } else {
-    document.getElementById("out").innerText =
-    "Try: x^2 + 5x + 6";
-  }
+if(v.includes("x^2") && v.includes("5x") && v.includes("6")){
+out.innerText="(x + 2)(x + 3)";
+}else{
+out.innerText="Try: x^2 + 5x + 6";
+}
 }
 </script>
 
