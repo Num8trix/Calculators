@@ -1,39 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Factor - Num8trix</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factorization - Num8trix</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="nav"></div>
 
 <div class="container">
-
-<div class="card">
-<h2>Factorization</h2>
-
-<input id="x" placeholder="x^2 + 5x + 6">
-
-<button onclick="factor()">Factor</button>
-
-<div class="result" id="out"></div>
+  <div class="card">
+    <h2>Quadratic Factorization</h2>
+    <input id="x" placeholder="Enter e.g. x^2 + 5x + 6">
+    <button onclick="factor()">Factorize</button>
+    <div class="result" id="out"></div>
+  </div>
 </div>
 
-</div>
+<footer>Num8trix Factorization</footer>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML=nav();</script>
+<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function factor(){
-let v=x.value;
-
-if(v.includes("x^2") && v.includes("5x") && v.includes("6")){
-out.innerText="(x + 2)(x + 3)";
-}else{
-out.innerText="Try: x^2 + 5x + 6";
-}
+function factor() {
+  const v = x.value.replace(/\s+/g,'');
+  if (v === "x^2+5x+6" || v === "x^2+5x+6") {
+    out.textContent = "(x + 2)(x + 3)";
+  } else {
+    out.textContent = "Try quadratic format: x^2 + bx + c";
+  }
 }
 </script>
 
