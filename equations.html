@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Equations - MathForge</title>
-  <link rel="stylesheet" href="styles.css">
+<title>Equations - Num8trix</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div id="nav"></div>
 
 <div class="container">
-  <div class="card">
-    <h2>Simultaneous Equations</h2>
 
-    <input id="a" placeholder="a1x + b1y = c1 (enter a1,b1,c1)">
-    <input id="b" placeholder="a2x + b2y = c2">
+<div class="card">
+<h2>Equations Solver</h2>
 
-    <button onclick="solve()">Solve</button>
+<input id="a" placeholder="a1,b1,c1">
+<input id="b" placeholder="a2,b2,c2">
 
-    <div class="result" id="out"></div>
-  </div>
+<button onclick="solve()">Solve</button>
+
+<div class="result" id="out"></div>
+</div>
+
 </div>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
+<script>document.getElementById("nav").innerHTML=nav();</script>
 
 <script>
 function solve(){
-  let A = document.getElementById("a").value.split(",").map(Number);
-  let B = document.getElementById("b").value.split(",").map(Number);
+let A=a.value.split(",").map(Number);
+let B=b.value.split(",").map(Number);
 
-  let [a1,b1,c1]=A;
-  let [a2,b2,c2]=B;
+let [a1,b1,c1]=A;
+let [a2,b2,c2]=B;
 
-  let x = (c1*b2 - c2*b1)/(a1*b2 - a2*b1);
-  let y = (a1*c2 - a2*c1)/(a1*b2 - a2*b1);
+let x=(c1*b2-c2*b1)/(a1*b2-a2*b1);
+let y=(a1*c2-a2*c1)/(a1*b2-a2*b1);
 
-  document.getElementById("out").innerText =
-  `x = ${x}\ny = ${y}`;
+out.innerText=`x=${x}\ny=${y}`;
 }
 </script>
 
