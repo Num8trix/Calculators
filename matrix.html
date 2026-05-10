@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,49 +12,172 @@
 <div id="nav"></div>
 
 <div class="container">
+
   <div class="card">
-    <h2>Matrix Operations</h2>
-    <p>Enter matrices using commas for columns and semicolons for rows.<br>Example: <code>1,2,3;4,5,6</code></p>
+    <h2>Matrix Calculator 🔢</h2>
+    <p>Perform matrix operations with ease. Enter matrices using semicolons (;) to separate rows and commas (,) to separate values.</p>
 
-    <input id="a" placeholder="Matrix A">
-    <input id="b" placeholder="Matrix B (optional)">
+```
+<input id="a" placeholder="Matrix A: e.g., 1,2,3;4,5,6" />
+<input id="b" placeholder="Matrix B: e.g., 7,8,9;10,11,12" />
 
-    <button onclick="add()">Add</button>
-    <button onclick="sub()">Subtract</button>
-
-    <div class="result" id="out"></div>
-  </div>
+<div style="margin-top: 16px;">
+  <button onclick="add()">➕ Add</button>
+  <button onclick="subtract()">➖ Subtract</button>
+  <button onclick="multiply()">✖️ Multiply</button>
+  <button onclick="transpose()">🔄 Transpose A</button>
+  <button onclick="determinant()">🎯 Det(A)</button>
 </div>
 
-<footer>Num8trix Matrix Calculator</footer>
+<div class="result" id="out"></div>
+```
+
+  </div>
+
+  <div class="card">
+    <h3>Examples</h3>
+    <p><strong>2×3 Matrix:</strong> 1,2,3;4,5,6</p>
+    <p><strong>3×3 Matrix:</strong> 1,0,0;0,1,0;0,0,1</p>
+    <p><strong>Addition:</strong> Both matrices must have the same dimensions</p>
+    <p><strong>Multiplication:</strong> A columns must equal B rows</p>
+  </div>
+
+</div>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function parseMatrix(m) {
-  return m.split(";").map(r => r.split(",").map(Number));
-}
+  document.getElementById("nav").innerHTML = nav();
 
-function add() {
-  try {
-    const A = parseMatrix(a.value), B = parseMatrix(b.value);
-    const R = A.map((r,i)=>r.map((v,j)=>v + B[i][j]));
-    out.textContent = JSON.stringify(R, null, 2);
-  } catch(e) {
-    out.textContent = "⚠️ Invalid input.";
+  function parse(m) {
+    if (!m || m.trim() === '') return null;
+    try {
+      return m.split(";").map(r => r.split(",").map(n => {
+        const num = parseFloat(n.trim());
+        if (isNaN(num)) throw new Error('Invalid number');
+        return num;
+      }));
+    } catch (e) {
+      return null;
+    }
   }
-}
 
-function sub() {
-  try {
-    const A = parseMatrix(a.value), B = parseMatrix(b.value);
-    const R = A.map((r,i)=>r.map((v,j)=>v - B[i][j]));
-    out.textContent = JSON.stringify(R, null, 2);
-  } catch(e) {
-    out.textContent = "⚠️ Invalid input.";
+  function display(matrix) {
+    return matrix.map(row => row.map(n => n.toFixed(2)).join('  ')).join('\n');
   }
-}
+
+  function add() {
+    const A = parse(a.value);
+    const B = parse(b.value);
+    
+    if (!A || !B) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Invalid matrix format. Please check your input.</span>';
+      return;
+    }
+    
+    if (A.length !== B.length || A[0].length !== B[0].length) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Matrices must have the same dimensions for addition.</span>';
+      return;
+    }
+    
+    const R = A.map((r, i) => r.map((v, j) => v + B[i][j]));
+    out.innerHTML = `<strong>Result:</strong>\n\n${display(R)}`;
+  }
+
+  function subtract() {
+    const A = parse(a.value);
+    const B = parse(b.value);
+    
+    if (!A || !B) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Invalid matrix format. Please check your input.</span>';
+      return;
+    }
+    
+    if (A.length !== B.length || A[0].length !== B[0].length) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Matrices must have the same dimensions for subtraction.</span>';
+      return;
+    }
+    
+    const R = A.map((r, i) => r.map((v, j) => v - B[i][j]));
+    out.innerHTML = `<strong>Result:</strong>\n\n${display(R)}`;
+  }
+
+  function multiply() {
+    const A = parse(a.value);
+    const B = parse(b.value);
+    
+    if (!A || !B) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Invalid matrix format. Please check your input.</span>';
+      return;
+    }
+    
+    if (A[0].length !== B.length) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Matrix A columns must equal Matrix B rows for multiplication.</span>';
+      return;
+    }
+    
+    const R = A.map((row, i) =>
+      B[0].map((_, j) =>
+        row.reduce((sum, val, k) => sum + val * B[k][j], 0)
+      )
+    );
+    
+    out.innerHTML = `<strong>Result:</strong>\n\n${display(R)}`;
+  }
+
+  function transpose() {
+    const A = parse(a.value);
+    
+    if (!A) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Invalid matrix format. Please check your input.</span>';
+      return;
+    }
+    
+    const R = A[0].map((_, i) => A.map(row => row[i]));
+    out.innerHTML = `<strong>Transpose of Matrix A:</strong>\n\n${display(R)}`;
+  }
+
+  function determinant() {
+    const A = parse(a.value);
+    
+    if (!A) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Invalid matrix format. Please check your input.</span>';
+      return;
+    }
+    
+    if (A.length !== A[0].length) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Determinant requires a square matrix.</span>';
+      return;
+    }
+    
+    if (A.length > 3) {
+      out.innerHTML = '<span style="color: #ffa502;">⚠️ Determinant calculation is limited to 3×3 matrices or smaller.</span>';
+      return;
+    }
+    
+    const det = calculateDeterminant(A);
+    out.innerHTML = `<strong>Determinant:</strong>\n\ndet(A) = ${det.toFixed(4)}`;
+  }
+
+  function calculateDeterminant(matrix) {
+    const n = matrix.length;
+    
+    if (n === 1) return matrix[0][0];
+    
+    if (n === 2) {
+      return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
+    
+    if (n === 3) {
+      return (
+        matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
+        matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
+        matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])
+      );
+    }
+    
+    return 0;
+  }
 </script>
 
 </body>
