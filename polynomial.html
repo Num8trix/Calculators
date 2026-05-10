@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Polynomial - Num8trix</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
+<div id="nav"></div>
+
+<div class="container">
+
+<div class="card">
+<h2>Polynomial Division</h2>
+
+<input id="a" placeholder="x^3 + 2x^2 - 5x + 3">
+<input id="b" placeholder="x + 1">
+
+<button onclick="go()">Solve</button>
+
+<div class="result" id="out"></div>
+</div>
+
+</div>
+
+<script src="app.js"></script>
+<script>document.getElementById("nav").innerHTML=nav();</script>
+
+<script>
+function go(){
+out.innerText =
+`Step 1: Arrange terms
+Step 2: Divide leading terms
+Step 3: Subtract
+Step 4: Repeat until complete`;
+}
+</script>
+
+</body>
+</html>
