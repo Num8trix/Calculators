@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,36 +12,153 @@
 <div id="nav"></div>
 
 <div class="container">
-  <div class="card">
-    <h2>Simultaneous Equations Solver</h2>
-    <p>Enter in form (a1,b1,c1) and (a2,b2,c2).</p>
 
-    <input id="a" placeholder="a1,b1,c1">
-    <input id="b" placeholder="a2,b2,c2">
-    <button onclick="solve()">Solve</button>
-    <div class="result" id="out"></div>
+  <div class="card">
+    <h2>Simultaneous Equations Solver ⚖️</h2>
+    <p>Solve systems of linear equations. Enter coefficients for two equations in the form ax + by = c.</p>
+
+```
+<div style="margin-top: 16px;">
+  <label style="color: var(--muted); font-size: 14px; display: block; margin-bottom: 8px;">
+    Equation 1: <span style="color: var(--text);">a₁x + b₁y = c₁</span>
+  </label>
+  <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <input id="a1" placeholder="a₁" type="number" step="any" />
+    <input id="b1" placeholder="b₁" type="number" step="any" />
+    <input id="c1" placeholder="c₁" type="number" step="any" />
   </div>
 </div>
 
-<footer>Num8trix Equations Solver</footer>
+<div style="margin-top: 16px;">
+  <label style="color: var(--muted); font-size: 14px; display: block; margin-bottom: 8px;">
+    Equation 2: <span style="color: var(--text);">a₂x + b₂y = c₂</span>
+  </label>
+  <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <input id="a2" placeholder="a₂" type="number" step="any" />
+    <input id="b2" placeholder="b₂" type="number" step="any" />
+    <input id="c2" placeholder="c₂" type="number" step="any" />
+  </div>
+</div>
+
+<button onclick="solve()">🎯 Solve</button>
+<button onclick="example1()">Example 1</button>
+<button onclick="example2()">Example 2</button>
+
+<div class="result" id="out"></div>
+```
+
+  </div>
+
+  <div class="card">
+    <h3>How It Works</h3>
+    <p>The solver uses Cramer's rule to find the solution:</p>
+    <p><strong>Example:</strong> 2x + 3y = 13 and x - y = -1</p>
+    <p>Enter: a₁=2, b₁=3, c₁=13, a₂=1, b₂=-1, c₂=-1</p>
+    <p>Solution: x = 2, y = 3</p>
+  </div>
+
+</div>
 
 <script src="app.js"></script>
-<script>document.getElementById("nav").innerHTML = nav();</script>
 
 <script>
-function solve() {
-  try {
-    let [a1,b1,c1] = a.value.split(",").map(Number);
-    let [a2,b2,c2] = b.value.split(",").map(Number);
-    let det = (a1*b2 - a2*b1);
-    if (det === 0) return out.textContent = "❌ No unique solution.";
-    let x = (c1*b2 - c2*b1) / det;
-    let y = (a1*c2 - a2*c1) / det;
-    out.textContent = `x = ${x}\ny = ${y}`;
-  } catch {
-    out.textContent = "⚠️ Please enter valid numeric inputs.";
+  document.getElementById("nav").innerHTML = nav();
+
+  function example1() {
+    a1.value = "2";
+    b1.value = "3";
+    c1.value = "13";
+    a2.value = "1";
+    b2.value = "-1";
+    c2.value = "-1";
+    solve();
   }
-}
+
+  function example2() {
+    a1.value = "3";
+    b1.value = "2";
+    c1.value = "12";
+    a2.value = "1";
+    b2.value = "4";
+    c2.value = "10";
+    solve();
+  }
+
+  function solve() {
+    const vals = {
+      a1: parseFloat(a1.value),
+      b1: parseFloat(b1.value),
+      c1: parseFloat(c1.value),
+      a2: parseFloat(a2.value),
+      b2: parseFloat(b2.value),
+      c2: parseFloat(c2.value)
+    };
+    
+    // Validation
+    if (Object.values(vals).some(isNaN)) {
+      out.innerHTML = '<span style="color: #ff4757;">❌ Please enter all coefficients.</span>';
+      return;
+    }
+    
+    let result = '<strong>Step-by-Step Solution:</strong>\n\n';
+    result += `Equation 1: ${vals.a1}x ${vals.b1 >= 0 ? '+' : ''}${vals.b1}y = ${vals.c1}\n`;
+    result += `Equation 2: ${vals.a2}x ${vals.b2 >= 0 ? '+' : ''}${vals.b2}y = ${vals.c2}\n\n`;
+    
+    // Calculate determinant
+    const D = vals.a1 * vals.b2 - vals.a2 * vals.b1;
+    
+    result += `Step 1: Calculate main determinant (D)\n`;
+    result += `D = a₁b₂ - a₂b₁\n`;
+    result += `D = (${vals.a1})(${vals.b2}) - (${vals.a2})(${vals.b1})\n`;
+    result += `D = ${vals.a1 * vals.b2} - ${vals.a2 * vals.b1}\n`;
+    result += `D = ${D}\n\n`;
+    
+    if (D === 0) {
+      if (vals.c1 * vals.b2 === vals.c2 * vals.b1) {
+        result += '<span style="color: #ffa502;">⚠️ Infinite solutions - The equations are identical.</span>';
+      } else {
+        result += '<span style="color: #ff4757;">❌ No solution - The lines are parallel.</span>';
+      }
+      out.innerHTML = result;
+      return;
+    }
+    
+    // Calculate x
+    const Dx = vals.c1 * vals.b2 - vals.c2 * vals.b1;
+    result += `Step 2: Calculate Dx (determinant for x)\n`;
+    result += `Dx = c₁b₂ - c₂b₁\n`;
+    result += `Dx = (${vals.c1})(${vals.b2}) - (${vals.c2})(${vals.b1})\n`;
+    result += `Dx = ${vals.c1 * vals.b2} - ${vals.c2 * vals.b1}\n`;
+    result += `Dx = ${Dx}\n\n`;
+    
+    // Calculate y
+    const Dy = vals.a1 * vals.c2 - vals.a2 * vals.c1;
+    result += `Step 3: Calculate Dy (determinant for y)\n`;
+    result += `Dy = a₁c₂ - a₂c₁\n`;
+    result += `Dy = (${vals.a1})(${vals.c2}) - (${vals.a2})(${vals.c1})\n`;
+    result += `Dy = ${vals.a1 * vals.c2} - ${vals.a2 * vals.c1}\n`;
+    result += `Dy = ${Dy}\n\n`;
+    
+    const x = Dx / D;
+    const y = Dy / D;
+    
+    result += `Step 4: Calculate x and y using Cramer's Rule\n`;
+    result += `x = Dx / D = ${Dx} / ${D} = ${x.toFixed(4)}\n`;
+    result += `y = Dy / D = ${Dy} / ${D} = ${y.toFixed(4)}\n\n`;
+    
+    // Verification
+    result += `Step 5: Verify the solution\n`;
+    const check1 = vals.a1 * x + vals.b1 * y;
+    const check2 = vals.a2 * x + vals.b2 * y;
+    result += `Equation 1: ${vals.a1}(${x.toFixed(4)}) + ${vals.b1}(${y.toFixed(4)}) = ${check1.toFixed(4)} ${Math.abs(check1 - vals.c1) < 0.0001 ? '✓' : '✗'}\n`;
+    result += `Equation 2: ${vals.a2}(${x.toFixed(4)}) + ${vals.b2}(${y.toFixed(4)}) = ${check2.toFixed(4)} ${Math.abs(check2 - vals.c2) < 0.0001 ? '✓' : '✗'}\n\n`;
+    
+    result += `<strong style="color: var(--success);">✓ Solution:</strong>\n`;
+    result += `x = ${x.toFixed(4)}\n`;
+    result += `y = ${y.toFixed(4)}`;
+    
+    out.innerHTML = result;
+  }
 </script>
 
 </body>
